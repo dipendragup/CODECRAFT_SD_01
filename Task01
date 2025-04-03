@@ -1,0 +1,48 @@
+#include <iostream>
+using namespace std;
+
+// Converts Celsius to Fahrenheit and Kelvin
+void convertCelsius(double tempC) {
+    cout << "Temperature in Fahrenheit: " << (tempC * 9 / 5) + 32 << " F" << endl;
+    cout << "Temperature in Kelvin: " << tempC + 273.15 << " K" << endl;
+}
+
+// Converts Fahrenheit to Celsius and Kelvin
+void convertFahrenheit(double tempF) {
+    double tempC = (tempF - 32) * 5 / 9;
+    cout << "Temperature in Celsius: " << tempC << " C" << endl;
+    cout << "Temperature in Kelvin: " << tempC + 273.15 << " K" << endl;
+}
+
+// Converts Kelvin to Celsius and Fahrenheit
+void convertKelvin(double tempK) {
+    double tempC = tempK - 273.15;
+    cout << "Temperature in Celsius: " << tempC << " C" << endl;
+    cout << "Temperature in Fahrenheit: " << (tempC * 9 / 5) + 32 << " F" << endl;
+}
+
+int main() {
+    double temperature;
+    char unit;
+
+    cout << "Enter temperature value: ";
+    cin >> temperature;
+    cout << "Enter unit (C for Celsius, F for Fahrenheit, K for Kelvin): ";
+    cin >> unit;
+
+    switch (tolower(unit)) {
+        case 'c':
+            convertCelsius(temperature);
+            break;
+        case 'f':
+            convertFahrenheit(temperature);
+            break;
+        case 'k':
+            convertKelvin(temperature);
+            break;
+        default:
+            cout << "Invalid input! Please use C, F, or K." << endl;
+    }
+
+    return 0;
+}
