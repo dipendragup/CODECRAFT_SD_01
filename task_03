@@ -1,0 +1,127 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+struct Person {
+    string fullName;
+    string contactNumber;
+    string emailID;
+};
+
+vector<Person> contactList;
+const string STORAGE_FILE = "contacts.txt";
+
+void readFromFile() {
+    ifstream input(STORAGE_FILE);
+    Person entry;
+    while (getline(input, entry.fullName) && getline(input, entry.contactNumber) && getline(input, entry.emailID)) {
+        contactList.push_back(entry);
+    }
+    input.close();
+}
+
+void writeToFile() {
+    ofstream output(STORAGE_FILE);
+    for (const auto& entry : contactList) {
+        output << entry.fullName << endl;
+        output << entry.contactNumber << endl;
+        output << entry.emailID << endl;
+    }
+    output.close();
+}
+
+void insertContact() {
+    Person entry;
+    cout << "Name: ";
+    getline(cin, entry.fullName);
+    cout << "Phone: ";
+    getline(cin, entry.contactNumber);
+    cout << "Email: ";
+    getline(cin, entry.emailID);
+    contactList.push_back(entry);
+    cout << "New contact stored.\n";
+}
+
+void displayContacts() {
+    if (contactList.empty()) {
+        cout << "No entries found.\n";
+        return;
+    }
+    for (size_t i = 0; i < contactList.size(); ++i) {
+        cout << i + 1 << ". " << contactList[i].fullName << " | " 
+             << contactList[i].contactNumber << " | " 
+             << contactList[i].emailID << "\n";
+    }
+}
+
+void modifyContact() {
+    displayContacts();
+    if (contactList.empty()) return;
+
+    cout << "Select contact number to update: ";
+    int choice;
+    cin >> choice;
+    cin.ignore();
+
+    if (choice < 1 || choice > contactList.size()) {
+        cout << "Invalid selection.\n";
+        return;
+    }
+
+    cout << "New Name: ";
+    getline(cin, contactList[choice - 1].fullName);
+    cout << "New Phone: ";
+    getline(cin, contactList[choice - 1].contactNumber);
+    cout << "New Email: ";
+    getline(cin, contactList[choice - 1].emailID);
+
+    cout << "Contact updated.\n";
+}
+
+void removeContact() {
+    displayContacts();
+    if (contactList.empty()) return;
+
+    cout << "Enter number to delete: ";
+    int selection;
+    cin >> selection;
+    cin.ignore();
+
+    if (selection < 1 || selection > contactList.size()) {
+        cout << "Invalid number.\n";
+        return;
+    }
+
+    cout << "Removed: " << contactList[selection - 1].fullName << endl;
+    contactList.erase(contactList.begin() + selection - 1);
+}
+
+int main() {
+    readFromFile();
+
+    while (true) {
+        cout << "\n--- Contact Book ---\n";
+        cout << "1. Add New\n";
+        cout << "2. View All\n";
+        cout << "3. Edit Entry\n";
+        cout << "4. Remove Entry\n";
+        cout << "5. Quit\n";
+        cout << "Select Option: ";
+
+        int menuChoice;
+        cin >> menuChoice;
+        cin.ignore();
+
+        switch (menuChoice) {
+            case 1: insertContact(); break;
+            case 2: displayContacts(); break;
+            case 3: modifyContact(); break;
+            case 4: removeContact(); break;
+            case 5: writeToFile(); cout << "Exiting..."; return 0;
+            default: cout << "Invalid choice. Try again.\n";
+        }
+    }
+}
